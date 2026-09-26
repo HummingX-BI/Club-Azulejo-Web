@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Wind, Activity, LineChart } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -34,8 +35,15 @@ export function Metodo() {
   return (
     <section
       id="metodo"
-      data-bg="canvas-deep"
-      style={{ paddingBlock: "var(--spacing-section)" }}
+      data-bg="light"
+      style={{ 
+        paddingBlock: "var(--spacing-section)",
+        "--color-text": "#0B1B24",
+        "--color-text-muted": "#5C6A72",
+        "--color-line": "rgba(11,27,36,0.12)",
+        "--color-surface": "rgba(11,27,36,0.04)",
+        "--color-surface-2": "#FFFFFF"
+      } as React.CSSProperties}
     >
       <Container>
         <div className="metodo-grid">
@@ -91,6 +99,64 @@ export function Metodo() {
 
           {/* ── Columna derecha: contenido ────────────────────────── */}
           <div className="metodo-content-col">
+            {/* ── Stats del módulo ──────────────────────────────── */}
+            <motion.div
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+              }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              style={{
+                display: "flex",
+                gap: "0",
+                marginBottom: "40px",
+                paddingBottom: "28px",
+                borderBottom: "1px solid var(--color-line)",
+              }}
+            >
+              {[
+                { value: "1:4",        label: "Ratio por instructor" },
+                { value: "31.2 °C",   label: "Agua templada" },
+                { value: "Salina + UV", label: "Sin cloro agresivo" },
+              ].map(({ value, label }, i) => (
+                <motion.div
+                  key={label}
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } }}
+                  style={{
+                    flex: 1,
+                    paddingLeft: i > 0 ? "20px" : 0,
+                    borderLeft: i > 0 ? "1px solid var(--color-line)" : "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "3px",
+                  }}
+                >
+                  <span
+                    className="tabular"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 600,
+                      fontSize: "var(--font-size-small)",
+                      color: "var(--color-text)",
+                    }}
+                  >
+                    {value}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "var(--font-size-eyebrow)",
+                      color: "var(--color-text-muted)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {label}
+                  </span>
+                </motion.div>
+              ))}
+            </motion.div>
+
             <Reveal>
               <Eyebrow number="01">
                 Pedagogía sensorial y científica
@@ -124,12 +190,24 @@ export function Metodo() {
                   color: "var(--color-text-muted)",
                   lineHeight: 1.7,
                   maxWidth: "44ch",
-                  marginBottom: "48px",
+                  marginBottom: "16px",
                 }}
               >
                 Cada alumno avanza a su ritmo natural, sin miedos impuestos.
                 Nuestro programa combina ciencia del movimiento con pedagogía
                 sensorial para convertir el agua en un espacio de confianza.
+              </p>
+              <p
+                style={{
+                  fontSize: "var(--font-size-body)",
+                  color: "var(--color-text-muted)",
+                  lineHeight: 1.7,
+                  maxWidth: "44ch",
+                  marginBottom: "48px",
+                }}
+              >
+                Enseñanza personalizada en agua templada con ratio 1:4,
+                metodología propia y seguimiento continuo para cada alumno.
               </p>
             </Reveal>
 

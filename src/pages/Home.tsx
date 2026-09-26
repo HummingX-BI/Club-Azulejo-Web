@@ -16,7 +16,17 @@ export default function Home() {
         <Hero />
       </section>
 
-      {/* El Método — data-bg="canvas-deep" (tono más profundo) */}
+      {/* Spacer: canvas sólido entre el hero y el módulo 01.
+          El usuario scrollea, el hero se cubre de negro, ve canvas puro,
+          y LUEGO aparece Metodo — tres beats distintos. */}
+      <div
+        aria-hidden
+        style={{
+          height: "clamp(120px, 16vw, 240px)",
+        }}
+      />
+
+      {/* Módulo 01 — El Método */}
       <Metodo />
 
       {/* Programas — 4 fases — data-bg="canvas" (alterna con deep del Método) */}

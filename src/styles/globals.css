@@ -78,6 +78,8 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.05;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  /* Fraunces: optical size large, disable playful axes for editorial look */
+  font-variation-settings: "opsz" 40, "SOFT" 0, "WONK" 0;
 }
 
 /* ── Selection ────────────────────────────────── */

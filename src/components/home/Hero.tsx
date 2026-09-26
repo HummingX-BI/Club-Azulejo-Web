@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionTemplate } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -7,7 +7,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 
 /* ────────────────────────────────────────────────
    Hero — fullscreen with parallax image, gradient
-   dissolve, and staggered text entrance
+    dissolve, and staggered text entrance
    ──────────────────────────────────────────────── */
 
 /* Attempt to load the hero image; fall back to CSS gradient */
@@ -20,11 +20,6 @@ try {
   /* no image – will use CSS fallback */
 }
 
-const STATS = [
-  { value: "1:4", label: "Ratio por instructor" },
-  { value: "31.2 °C", label: "Agua templada todo el año" },
-  { value: "Salina + UV", label: "Sin cloro agresivo" },
-];
 
 /* Stagger animation variants */
 const containerVariants = {
@@ -49,206 +44,244 @@ export function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ["start start", "end start"],
+    offset: ["start start", "end end"],
   });
 
-  /* Parallax: image moves slower than scroll */
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    console.log("Hero scrollYProgress:", latest.toFixed(3));
+  });
+
+  /* Parallax + zoom: image moves slower than scroll and scales up */
+  const imageScale = useTransform(scrollYProgress, [0, 0.6], [1, 3]);
+  const darkOverlayY = useTransform(scrollYProgress, [0.2, 0.6], ["100%", "0%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.25], ["0px", "-100px"]);
+  const contentFilter = useMotionTemplate`opacity(${contentOpacity})`;
 
   return (
-    <section
-      ref={heroRef}
-      style={{
-        position: "relative",
-        height: "100svh",
-        minHeight: "640px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        overflow: "hidden",
-      }}
-    >
-      {/* ── Background layer ──────────────────── */}
-      <motion.div
-        data-parallax
+    <div ref={heroRef} style={{ height: "280vh", position: "relative" }}>
+      <section
         style={{
-          position: "absolute",
-          inset: 0,
-          y: imageY,
-          zIndex: 0,
-          ...(heroSrc
-            ? {
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        {/* ── Background layers wrapper ──────────────
+          overflow:hidden + contain:paint are scoped here so they clip
+          ONLY background visuals. The text content (below) is in normal
+          flow and can grow past 100svh on short viewports without being
+          clipped.
+      ──────────────────────────────────────────── */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            overflow: "hidden",
+            contain: "paint",
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        >
+          {/* ── Sharp image layer ─────────────────── */}
+          <motion.div
+            data-parallax
+            style={{
+              position: "absolute",
+              inset: 0,
+              scale: imageScale,
+              transformOrigin: "50% 100%",
+              ...(heroSrc
+                ? {
+                  backgroundImage: `url(${heroSrc})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center bottom",
+                }
+                : {
+                  /* CSS-only fallback: layered radial gradients */
+                  background: [
+                    "radial-gradient(ellipse 120% 80% at 30% 60%, rgba(70, 194, 207, 0.12) 0%, transparent 70%)",
+                    "radial-gradient(ellipse 100% 100% at 80% 30%, rgba(18, 39, 49, 0.9) 0%, transparent 60%)",
+                    "radial-gradient(ellipse 80% 60% at 50% 80%, rgba(26, 52, 65, 0.7) 0%, transparent 50%)",
+                    "linear-gradient(180deg, #0E2430 0%, #0B1B24 100%)",
+                  ].join(", "),
+                }),
+            }}
+          >
+            {/* Side vignette */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                background:
+                  "radial-gradient(ellipse 60% 62% at 50% 55%, transparent 60%, rgba(11,27,36,0.5) 100%)",
+              }}
+            />
+          </motion.div>
+
+          {/* ── Edge-blur layer (heroSrc only) ────────
+            Duplicates the sharp image, masks centre transparent so
+            only edges receive blur — "sharp centre / soft edges" effect.
+            scale(1.1) prevents blur() border artefacts.
+        ──────────────────────────────────────────── */}
+          {heroSrc && (
+            <motion.div
+              style={{
+                position: "absolute",
+                inset: 0,
                 backgroundImage: `url(${heroSrc})`,
                 backgroundSize: "cover",
-                backgroundPosition: "center 40%",
-              }
-            : {
-                /* CSS-only fallback: layered radial gradients */
-                background: [
-                  "radial-gradient(ellipse 120% 80% at 30% 60%, rgba(70, 194, 207, 0.12) 0%, transparent 70%)",
-                  "radial-gradient(ellipse 100% 100% at 80% 30%, rgba(18, 39, 49, 0.9) 0%, transparent 60%)",
-                  "radial-gradient(ellipse 80% 60% at 50% 80%, rgba(26, 52, 65, 0.7) 0%, transparent 50%)",
-                  "linear-gradient(180deg, #0E2430 0%, #0B1B24 100%)",
-                ].join(", "),
-              }),
-        }}
-      />
+                backgroundPosition: "center bottom",
+                filter: "blur(28px)",
+                maskImage:
+                  "radial-gradient(ellipse 60% 62% at 50% 55%, transparent 60%, black 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 60% 62% at 50% 55%, transparent 60%, black 100%)",
+                scale: imageScale,
+                transformOrigin: "50% 100%",
+              }}
+            />
+          )}
 
-      {/* ── Dark overlay ──────────────────────── */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
-          background: heroSrc
-            ? "linear-gradient(180deg, rgba(11,27,36,0.45) 0%, rgba(11,27,36,0.2) 40%, rgba(11,27,36,0.75) 75%, var(--color-canvas) 100%)"
-            : "linear-gradient(180deg, transparent 0%, transparent 60%, var(--color-canvas) 100%)",
-        }}
-      />
+          {/* ── Dark overlay ──────────────────────── */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: heroSrc
+                ? "linear-gradient(180deg, rgba(11,27,36,0.6) 0%, rgba(11,27,36,0.35) 40%, rgba(11,27,36,0.55) 100%)"
+                : "linear-gradient(180deg, transparent 0%, transparent 80%, var(--color-canvas) 100%)",
+            }}
+          />
 
-      {/* ── Content ───────────────────────────── */}
-      <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", paddingTop: "104px" }}>
-        <Container>
+          {/* ── Text-area contrast booster ────────────
+            Radial shadow behind the copy block guarantees legibility
+            regardless of what the photo shows at that spot.
+        ──────────────────────────────────────────── */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              pointerEvents: "none",
+              background:
+                "radial-gradient(ellipse 55% 45% at 50% 42%, rgba(6,15,20,0.4) 0%, transparent 70%)",
+            }}
+          />
+
+          {/* ── Canvas engulfment overlay ──────────── */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            style={{ maxWidth: "720px" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              pointerEvents: "none",
+              backgroundColor: "var(--bg-current, var(--color-canvas))",
+              y: darkOverlayY,
+              zIndex: 2,
+            }}
           >
-            <motion.div variants={itemVariants} style={{ marginBottom: "20px" }}>
-              <Eyebrow>
-                Atelier acuático privado · Lindavista
-              </Eyebrow>
-            </motion.div>
-
-            <motion.h1
-              variants={itemVariants}
+            <div
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "var(--font-size-display)",
-                fontWeight: 400,
-                lineHeight: 1.05,
-                letterSpacing: "-0.02em",
-                color: "var(--color-text)",
-                marginBottom: "24px",
+                position: "absolute",
+                top: "-8vh",
+                left: 0,
+                right: 0,
+                height: "8vh",
+                background: "linear-gradient(to top, var(--color-canvas) 0%, transparent 100%)",
               }}
-            >
-              Donde la técnica se convierte{" "}
-              <br className="hero-break" />
-              en <em style={{ fontStyle: "italic" }}>serenidad.</em>
-            </motion.h1>
-
-            <motion.p
-              variants={itemVariants}
-              style={{
-                fontSize: "var(--font-size-body)",
-                color: "var(--color-text-muted)",
-                lineHeight: 1.6,
-                maxWidth: "520px",
-                marginBottom: "32px",
-              }}
-            >
-              Enseñanza personalizada en agua templada con ratio 1:4,
-              metodología propia y seguimiento continuo para cada alumno.
-            </motion.p>
-
-            <motion.div
-              variants={itemVariants}
-              style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}
-            >
-              <Button variant="primary" size="lg" href="/inscripcion">
-                Agendar clase diagnóstica
-              </Button>
-              <Button variant="ghost" size="lg" href="/metodo">
-                Conocer el método
-              </Button>
-            </motion.div>
+            />
           </motion.div>
-        </Container>
+        </div>
 
-        {/* ── Stats bar ───────────────────────── */}
-        <div style={{ position: "relative", zIndex: 2 }}>
+        {/* ── Content ───────────────────────────── */}
+        {/*
+        FIX: Replaced justifyContent:center + paddingTop combo.
+        justifyContent:center distributes remaining space symmetrically, which
+        could pull content above the paddingTop boundary on short viewports.
+        Now using flex-start + paddingTop only, which gives deterministic placement.
+
+        Navbar total height breakdown:
+          header paddingTop: clamp(20px, 3vw, 32px)
+          <nav> height:      56px
+          header paddingBtm: clamp(20px, 3vw, 32px)
+          desired gap:       ~48px
+          ----------------------------------
+          Total minimum:     ~168px → clamp min set to 168px
+      */}
+        <motion.div
+          key="hero-content-wrapper"
+          style={{
+            position: "relative",
+            zIndex: 3,
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            paddingTop: "clamp(150px, 11vw, 140px)",
+            paddingBottom: 0,
+            opacity: contentOpacity,
+            filter: contentFilter,
+            y: contentY,
+          }}
+        >
           <Container>
             <motion.div
-              variants={itemVariants}
+              variants={containerVariants}
               initial="hidden"
               animate="visible"
-              transition={{ delay: 0.7 }}
-              className="hero-stats"
+              style={{
+                maxWidth: "720px",
+                marginInline: "auto",
+                textAlign: "center",
+              }}
             >
-              {STATS.map(({ value, label }, i) => (
-                <div key={label} className="hero-stat" style={{ display: "flex", alignItems: "baseline", gap: "12px" }}>
-                  {i > 0 && (
-                    <div
-                      className="hero-stat-divider"
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        width: "1px",
-                        height: "24px",
-                        backgroundColor: "var(--color-line)",
-                      }}
-                    />
-                  )}
-                  <span
-                    className="tabular"
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 600,
-                      fontSize: "var(--font-size-small)",
-                      color: "var(--color-text)",
-                    }}
-                  >
-                    {value}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "var(--font-size-eyebrow)",
-                      color: "var(--color-text-muted)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {label}
-                  </span>
-                </div>
-              ))}
+              <motion.div variants={itemVariants} style={{ marginBottom: "20px" }}>
+                <Eyebrow>
+                  Atelier acuático privado · Lindavista
+                </Eyebrow>
+              </motion.div>
+
+              <motion.h1
+                variants={itemVariants}
+                className="hero-heading"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "var(--font-size-display)",
+                  fontWeight: 600,
+                  lineHeight: 1.05,
+                  letterSpacing: "-0.04em",
+                  color: "var(--color-text)",
+                  marginBottom: "48px",
+                }}
+              >
+                Donde la técnica se convierte{" "}
+                <br className="hero-break" />
+                en <span style={{ color: "var(--color-accent)", fontStyle: "normal" }}>serenidad.</span>
+              </motion.h1>
+
+              <motion.div
+                variants={itemVariants}
+                className="hero-cta"
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <Button variant="primary" size="lg" href="/inscripcion">
+                  Agendar clase diagnóstica
+                </Button>
+              </motion.div>
             </motion.div>
           </Container>
 
-          {/* Padding below stats */}
-          <div style={{ height: "clamp(24px, 3vw, 40px)" }} />
-        </div>
-      </div>
-
-      {/* ── Scroll indicator ──────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 3,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "4px",
-        }}
-      >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ChevronDown size={18} strokeWidth={1.5} color="var(--color-text-muted)" style={{ opacity: 0.5 }} />
         </motion.div>
-      </motion.div>
 
-      {/* ── Responsive styles ─────────────────── */}
-      <style>{`
+
+
+        {/* ── Responsive styles ─────────────────── */}
+        <style>{`
         .hero-break {
           display: none;
         }
@@ -258,48 +291,18 @@ export function Hero() {
           }
         }
 
-        .hero-stats {
-          display: flex;
-          align-items: center;
-          gap: 0;
-          border-top: 1px solid var(--color-line);
-          border-bottom: 1px solid var(--color-line);
-        }
-        .hero-stat {
-          position: relative;
-          flex: 1;
-          padding: 16px 0;
-          padding-left: 0;
-        }
-        .hero-stat:not(:first-child) {
-          padding-left: 24px;
-        }
-        .hero-stat:first-child .hero-stat-divider {
-          display: none;
+        .hero-cta {
+          justify-content: center;
         }
 
-        @media (max-width: 767px) {
-          .hero-stats {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0;
-          }
-          .hero-stat {
-            width: 100%;
-            padding: 12px 0;
-          }
-          .hero-stat:not(:first-child) {
-            padding-left: 0;
-            border-top: 1px solid var(--color-line);
-          }
-          .hero-stat .hero-stat-divider {
-            display: none !important;
-          }
-          .hero-stats {
-            border-bottom: none;
+        /* Scale down the headline on short viewports so CTAs stay visible */
+        @media (max-height: 760px) {
+          .hero-heading {
+            font-size: clamp(2.25rem, 6vw, 4rem) !important;
           }
         }
       `}</style>
-    </section>
+      </section>
+    </div>
   );
 }

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import logoIcon from "@/assets/images/logo-icon.png";
 
 /* ────────────────────────────────────────────────
    Navbar — pastilla flotante centrada
@@ -20,13 +21,41 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeHash, setActiveHash] = useState<string>("");
   const location = useLocation();
 
   /* ── Track scroll ──────────────────────────── */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          setScrolled(currentScrollY > 40);
+          
+          const heroHeight = window.innerHeight * 3.5;
+          if (currentScrollY > lastScrollY && currentScrollY > 200) {
+            // Hide on scroll down, unless we've passed the Hero section
+            if (currentScrollY > heroHeight - 100) {
+              setHidden(false);
+            } else {
+              setHidden(true);
+            }
+          } else if (currentScrollY < lastScrollY) {
+            // Show on scroll up
+            setHidden(false);
+          }
+          
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -107,8 +136,11 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 100,
-          padding: "16px var(--container-padding)",
+          padding: "clamp(20px, 3vw, 32px) var(--container-padding)",
           pointerEvents: "none",
+          transform: hidden ? "translateY(-100%)" : "translateY(0)",
+          opacity: hidden ? 0 : 1,
+          transition: "transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         <nav
@@ -138,14 +170,25 @@ export function Navbar() {
           <Link
             to="/"
             style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
               fontFamily: "var(--font-display)",
               fontSize: "1.25rem",
               fontWeight: 400,
               letterSpacing: "-0.01em",
               color: "var(--color-text)",
               flexShrink: 0,
+              textShadow: scrolled ? "none" : "0 1px 3px rgba(0,0,0,0.4)",
             }}
           >
+            <img
+              src={logoIcon}
+              alt=""
+              width={28}
+              height={28}
+              style={{ display: "block", flexShrink: 0 }}
+            />
             Club Azulejo
           </Link>
 
@@ -178,27 +221,13 @@ export function Navbar() {
                     className="nav-link"
                     style={{
                       fontSize: "0.875rem",
-                      fontWeight: 500,
+                      fontWeight: isActive ? 700 : 500,
                       color: isActive ? "var(--color-text)" : "var(--color-text-muted)",
-                      transition: "color var(--duration-sm) var(--ease-out)",
-                      position: "relative",
+                      transition: "color var(--duration-sm) var(--ease-out), font-weight var(--duration-sm) var(--ease-out)",
+                      textShadow: scrolled ? "none" : "0 1px 3px rgba(0,0,0,0.4)",
                     }}
                   >
                     {label}
-                    {isActive && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: "-4px",
-                          left: "50%",
-                          transform: "translateX(-50%)",
-                          width: "4px",
-                          height: "4px",
-                          borderRadius: "50%",
-                          backgroundColor: "var(--color-accent)",
-                        }}
-                      />
-                    )}
                   </Link>
                 </li>
               );
@@ -207,8 +236,15 @@ export function Navbar() {
 
           {/* ── Desktop right ─────────────────── */}
           <div className="nav-desktop-right">
-            <Button variant="primary" size="md" href="/inscripcion">
-              Agendar diagnóstico
+            <Button
+              variant="primary"
+              size="md"
+              href="/inscripcion"
+              style={{
+                textShadow: scrolled ? "none" : "0 1px 3px rgba(0,0,0,0.4)",
+              }}
+            >
+              Agendar clase diagnóstica
             </Button>
           </div>
 
@@ -218,6 +254,10 @@ export function Navbar() {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={mobileOpen}
+            style={{
+              textShadow: scrolled ? "none" : "0 1px 3px rgba(0,0,0,0.4)",
+              filter: scrolled ? "none" : "drop-shadow(0 1px 3px rgba(0,0,0,0.4))",
+            }}
           >
             {mobileOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
           </button>
@@ -307,7 +347,7 @@ export function Navbar() {
                 href="/inscripcion"
                 onClick={() => setMobileOpen(false)}
               >
-                Agendar diagnóstico
+                Agendar clase diagnóstica
               </Button>
             </motion.div>
           </motion.div>
@@ -317,9 +357,12 @@ export function Navbar() {
       {/* ── Scoped styles ─────────────────────── */}
       <style>{`
         .nav-desktop-links {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
           display: flex;
           align-items: center;
-          gap: 28px;
+          gap: 40px;
           list-style: none;
           margin: 0;
           padding: 0;
