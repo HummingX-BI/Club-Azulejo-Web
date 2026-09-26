@@ -1,0 +1,56 @@
+/* ───────────────────────────────────────────────
+   Design Tokens — Club Azulejo
+   Tailwind CSS v4 @theme
+   ─────────────────────────────────────────────── */
+
+@theme {
+  /* ── Colour ──────────────────────────────────── */
+  --color-canvas:       #0B1B24;
+  --color-canvas-deep:  #081420; /* Método / secciones de profundidad */
+  --color-surface:      #122731;
+  --color-surface-2:    #1A3441;
+  --color-line:         rgba(237, 239, 234, 0.14);
+  --color-text:         #EDEFEA;
+  --color-text-muted:   #B4C0C4;
+  --color-accent:       #46C2CF;
+  --color-accent-fg:    #06222B;
+
+  /* ── Typography ──────────────────────────────── */
+  --font-display: "Newsreader Variable", "Newsreader", Georgia, serif;
+  --font-body:    "Manrope Variable", "Manrope", system-ui, sans-serif;
+
+  /* ── Font-size (fluid) ──────────────────────── */
+  --font-size-display:  clamp(2.75rem, 7vw, 5.75rem);
+  --font-size-h2:       clamp(2rem, 4vw, 3.5rem);
+  --font-size-h3:       clamp(1.375rem, 2.5vw, 1.75rem);
+  --font-size-body:     clamp(1rem, 0.5vw + 0.875rem, 1.125rem);
+  --font-size-eyebrow:  clamp(0.75rem, 0.25vw + 0.6875rem, 0.8125rem);
+  --font-size-small:    0.875rem;
+
+  /* ── Spacing (4 px base) ─────────────────────── */
+  --spacing-1:  4px;
+  --spacing-2:  8px;
+  --spacing-3:  12px;
+  --spacing-4:  16px;
+  --spacing-5:  20px;
+  --spacing-6:  24px;
+  --spacing-8:  32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-section: clamp(72px, 10vw, 128px);
+
+  /* ── Container ───────────────────────────────── */
+  --container-max:     1200px;
+  --container-padding: clamp(20px, 4vw, 48px);
+
+  /* ── Radii ───────────────────────────────────── */
+  --radius-pill: 999px;
+  --radius-card: 16px;
+
+  /* ── Transition ──────────────────────────────── */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-sm: 180ms;
+  --duration-md: 320ms;
+  --duration-lg: 560ms;
+}
