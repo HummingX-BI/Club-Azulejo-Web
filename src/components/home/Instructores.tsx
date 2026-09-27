@@ -102,63 +102,63 @@ function InstructorCard({ instructor }: { instructor: InstructorData }) {
             fontSize: "var(--font-size-small)",
             color: "var(--color-text-muted)",
             lineHeight: 1.65,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical" as const,
-            overflow: "hidden",
+            minHeight: "calc(1.65em * 4)",
           }}
         >
           {instructor.bio}
         </p>
 
-        <Divider />
-
-        {/* Stat destacado */}
-        <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-          <span
-            className="tabular"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.75rem",
-              fontWeight: 400,
-              color: "var(--color-text)",
-            }}
-          >
-            {instructor.statValue}
-          </span>
+        {/* Meta row */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "4px", marginTop: "8px" }}>
           <span
             style={{
-              fontSize: "0.6875rem",
-              color: "var(--color-text-muted)",
+              fontSize: "var(--font-size-eyebrow)",
               textTransform: "uppercase",
               letterSpacing: "0.08em",
+              color: "var(--color-text-muted)",
+              fontWeight: 600,
             }}
           >
             {instructor.statLabel}
           </span>
+          <span
+            className="tabular"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.5rem, 2.5vw, 1.875rem)",
+              color: "var(--color-text)",
+              fontWeight: 400,
+              lineHeight: 1.1,
+            }}
+          >
+            {instructor.statValue}
+          </span>
         </div>
 
-        {/* Certificaciones como tags */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", flex: 1, marginTop: "auto" }}>
-          {instructor.certificaciones.map((cert) => (
-            <span
-              key={cert}
-              title={cert}
-              style={{
-                fontSize: "0.6875rem",
-                color: "var(--color-text-muted)",
-                backgroundColor: "var(--color-surface-2)",
-                padding: "4px 10px",
-                borderRadius: "var(--radius-pill)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "220px",
-              }}
-            >
-              {cert}
-            </span>
-          ))}
+        <Divider />
+
+        {/* Certificaciones */}
+        <div style={{ flex: 1, marginTop: "auto" }}>
+          <div
+            style={{
+              fontSize: "var(--font-size-eyebrow)",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--color-text-muted)",
+              marginBottom: "8px",
+            }}
+          >
+            Certificaciones
+          </div>
+          <p
+            style={{
+              fontSize: "var(--font-size-small)",
+              color: "var(--color-text)",
+              lineHeight: 1.6,
+            }}
+          >
+            {instructor.certificaciones.join(" · ")}
+          </p>
         </div>
 
       </div>

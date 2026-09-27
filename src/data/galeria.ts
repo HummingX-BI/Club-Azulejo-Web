@@ -9,6 +9,15 @@ export type CategoriaGaleria =
   | "Reconocimientos"
   | "Clases";
 
+import imgCopaAzulejoInvierno from "@/assets/images/galeria-01-copa-azulejo-invierno.jpg";
+import imgEstimulacionTemprana from "@/assets/images/galeria-02-estimulacion-temprana.jpg";
+import imgNadoSincronizado from "@/assets/images/galeria-03-nado-sincronizado.jpg";
+import imgCertificacionFina from "@/assets/images/galeria-04-certificacion-fina.jpg";
+import imgBiomecanicaAvanzada from "@/assets/images/galeria-05-biomecanica-avanzada.jpg";
+import imgInterclubesRegional from "@/assets/images/galeria-06-interclubes-regional.jpg";
+import imgMedallistasEstatales from "@/assets/images/galeria-07-medallistas-estatales.jpg";
+import imgClaseAbiertaFamilias from "@/assets/images/galeria-08-clase-abierta-familias.jpg";
+
 export interface ItemGaleria {
   id: string;
   categoria: CategoriaGaleria;
@@ -24,55 +33,55 @@ export const GALERIA: ItemGaleria[] = [
     categoria: "Torneos",
     titulo: "Copa Azulejo Invierno",
     descripcionCorta: "Competencia interna de velocidad y estilos.",
-    imagenUrl: "",
+    imagenUrl: imgCopaAzulejoInvierno,
   },
   {
     id: "gal-2",
     categoria: "Clases",
     titulo: "Estimulación temprana",
     descripcionCorta: "Niveles iniciales desarrollando confianza acuática.",
-    imagenUrl: "",
+    imagenUrl: imgEstimulacionTemprana,
   },
   {
     id: "gal-3",
     categoria: "Exhibiciones",
     titulo: "Muestra de nado sincronizado",
     descripcionCorta: "Presentación del equipo Élite Azulejo.",
-    imagenUrl: "",
+    imagenUrl: imgNadoSincronizado,
   },
   {
     id: "gal-4",
     categoria: "Reconocimientos",
     titulo: "Certificación FINA 2026",
     descripcionCorta: "Renovación de nuestro cuerpo técnico colegiado.",
-    imagenUrl: "",
+    imagenUrl: imgCertificacionFina,
   },
   {
     id: "gal-5",
     categoria: "Clases",
     titulo: "Biomecánica avanzada",
     descripcionCorta: "Análisis de virajes y salidas en nivel 03.",
-    imagenUrl: "",
+    imagenUrl: imgBiomecanicaAvanzada,
   },
   {
     id: "gal-6",
     categoria: "Torneos",
     titulo: "Interclubes Regional",
     descripcionCorta: "Participación destacada de nuestros alumnos federados.",
-    imagenUrl: "",
+    imagenUrl: imgInterclubesRegional,
   },
   {
     id: "gal-7",
     categoria: "Reconocimientos",
     titulo: "Medallistas Estatales",
     descripcionCorta: "Alumnos de nivel 04 alcanzan el podio regional.",
-    imagenUrl: "",
+    imagenUrl: imgMedallistasEstatales,
   },
   {
     id: "gal-8",
     categoria: "Exhibiciones",
     titulo: "Clase abierta a familias",
     descripcionCorta: "Demostración de progreso de niveles 01 y 02.",
-    imagenUrl: "",
+    imagenUrl: imgClaseAbiertaFamilias,
   },
 ];

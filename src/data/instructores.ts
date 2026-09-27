@@ -27,7 +27,7 @@ export const INSTRUCTORES: InstructorData[] = [
     certificaciones: [
       "Cruz Roja Mexicana — Salvamento Acuático",
       "Certificación ASCA Level 2",
-      "Psicomotricidad Acuática Infantil (CONALEP)",
+      "Psicomotricidad Acuática Infantil (Universidad de León)",
     ],
     statLabel: "Ratio actual",
     statValue: "3 alumnos / sesión",

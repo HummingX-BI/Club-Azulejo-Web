@@ -4,6 +4,9 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Divider } from "@/components/ui/Divider";
 import { Reveal } from "@/components/ui/Reveal";
 import metodoImg from "@/assets/images/metodo.jpg";
+import imgPilar01 from "@/assets/images/metodo-pilar-01-adaptacion.jpg";
+import imgPilar02 from "@/assets/images/metodo-pilar-02-biomecanica.jpg";
+import imgPilar03 from "@/assets/images/metodo-pilar-03-bitacora.jpg";
 
 /* ────────────────────────────────────────────────────────────────
    Metodo — sección "El Método" (Home)
@@ -14,17 +17,20 @@ const PILARES = [
   {
     num: "01",
     title: "Adaptación Consciente",
-    body: "Regulación respiratoria natural antes de la inmersión; dominio de flotación horizontal sin chalecos rígidos.",
+    body: "Antes de nadar, enseñamos a respirar. Cada alumno aprende a regular su respiración de forma consciente antes de la primera inmersión, sustituyendo el miedo por curiosidad. Practicamos la flotación horizontal sin chalecos rígidos ni flotadores artificiales, para que el cuerpo aprenda a confiar en el agua por sí mismo — la base de todo lo que viene después.",
+    image: imgPilar01,
   },
   {
     num: "02",
     title: "Biomecánica FINA",
-    body: "Desglose cinemático de brazada, rolido escapular y patada propulsiva, con cámaras subacuáticas HD.",
+    body: "Grabamos cada sesión con cámaras subacuáticas HD para desglosar, cuadro a cuadro, el rolido escapular, la entrada de mano y la patada propulsiva de cada estilo. Nuestros instructores certificados FINA comparan el video con los lineamientos técnicos internacionales y ajustan la brazada en tiempo real, no después de meses de práctica repetida sin corrección.",
+    image: imgPilar02,
   },
   {
     num: "03",
     title: "Bitácora Digital en Tiempo Real",
-    body: "Al terminar cada clase, el instructor registra métricas de fatiga, repeticiones y video clave en el Portal de Familias.",
+    body: "Al salir del agua, el progreso no se queda en la alberca. Cada instructor registra métricas de fatiga, repeticiones y el clip de video más relevante de la sesión directamente en el Portal de Familias, para que los padres vean —sesión a sesión— la evolución técnica real de su hijo, no solo una calificación genérica de fin de mes.",
+    image: imgPilar03,
   },
 ] as const;
 
@@ -112,72 +118,77 @@ export function Metodo() {
 
       {/* ── Fila 2: caption + pilares. DENTRO de <Container>, normal. ── */}
       <Container>
-        <div
-          style={{
-            marginTop: "clamp(40px, 6vw, 64px)",
-            backgroundColor: "var(--color-surface)",
-            borderRadius: "var(--radius-card)",
-            padding: "clamp(32px, 5vw, 56px)",
-          }}
-        >
-          <div style={{ maxWidth: "48ch", marginBottom: "clamp(32px, 4vw, 48px)" }}>
-            <div style={{
-              width: "32px",
-              height: "3px",
-              backgroundColor: "var(--color-accent)",
-              marginBottom: "16px",
-            }} />
-            <Eyebrow>Pedagogía acuática libre de estrés</Eyebrow>
-            <p style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
-              fontWeight: 400,
-              lineHeight: 1.25,
-              color: "var(--color-text)",
-              marginTop: "12px",
-            }}>
-              Referencia: lineamientos técnicos FINA.
-            </p>
-          </div>
+        <div style={{ marginTop: "clamp(40px, 6vw, 64px)" }}>
+          <Reveal>
+            <Eyebrow>Cómo trabajamos</Eyebrow>
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
+                fontWeight: 400,
+                color: "var(--color-text)",
+                marginTop: "12px",
+                marginBottom: "clamp(40px, 6vw, 64px)",
+              }}
+            >
+              Sesión a sesión, con evidencia.
+            </h3>
+          </Reveal>
 
-          <div className="metodo-pilares-row">
-            {PILARES.map(({ num, title, body }, i) => (
-              <Reveal key={num} delay={0.1 + i * 0.08} style={{ display: "contents" }}>
-                <div className="metodo-pilar-col">
-                  <span
-                    className="tabular"
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "clamp(2rem, 3vw, 2.75rem)",
-                      fontWeight: 400,
-                      lineHeight: 1,
-                      color: "var(--color-line)",
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {num}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "var(--font-size-body)",
-                      fontWeight: 600,
-                      color: "var(--color-text)",
-                      marginTop: "8px",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    {title}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "var(--font-size-small)",
-                      color: "var(--color-text-muted)",
-                      lineHeight: 1.65,
-                    }}
-                  >
-                    {body}
-                  </p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "clamp(56px, 8vw, 96px)",
+            }}
+          >
+            {PILARES.map(({ num, title, body, image }, i) => (
+              <Reveal key={num}>
+                <div
+                  className={`metodo-pilar-row ${
+                    i % 2 !== 0 ? "metodo-pilar-row-reverse" : ""
+                  }`}
+                >
+                  <div className="metodo-pilar-image-col">
+                    <img src={image} alt={title} className="metodo-pilar-image" />
+                  </div>
+                  <div className="metodo-pilar-text-col">
+                    <span
+                      className="tabular"
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
+                        fontWeight: 400,
+                        lineHeight: 1,
+                        color: "var(--color-accent)",
+                        letterSpacing: "-0.02em",
+                        display: "block",
+                        marginBottom: "16px",
+                      }}
+                    >
+                      {num}
+                    </span>
+                    <h3
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
+                        fontWeight: 400,
+                        color: "var(--color-text)",
+                        marginBottom: "16px",
+                      }}
+                    >
+                      {title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: "var(--font-size-body)",
+                        color: "var(--color-text-muted)",
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {body}
+                    </p>
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -215,18 +226,29 @@ export function Metodo() {
           position: absolute;
           inset: 0;
         }
-        .metodo-pilares-row {
+        
+        .metodo-pilar-row {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 0;
+          grid-template-columns: 5fr 7fr;
+          gap: clamp(32px, 5vw, 64px);
+          align-items: center;
         }
-        .metodo-pilar-col {
-          padding: 28px clamp(16px, 3vw, 32px);
-          border-left: 1px solid var(--color-line);
+        .metodo-pilar-row-reverse {
+          grid-template-columns: 7fr 5fr;
         }
-        .metodo-pilar-col:first-child {
-          border-left: none;
-          padding-left: 0;
+        .metodo-pilar-row-reverse .metodo-pilar-image-col {
+          order: 2;
+        }
+        .metodo-pilar-row-reverse .metodo-pilar-text-col {
+          order: 1;
+        }
+        .metodo-pilar-image {
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          object-fit: cover;
+          border-radius: var(--radius-card);
+          border: 1px solid var(--color-line);
+          display: block;
         }
 
         @media (max-width: 1023px) {
@@ -245,16 +267,16 @@ export function Metodo() {
             padding-inline: var(--container-padding);
             padding-top: 24px;
           }
-          .metodo-pilares-row {
+          
+          .metodo-pilar-row, .metodo-pilar-row-reverse {
             grid-template-columns: 1fr;
+            gap: 32px;
           }
-          .metodo-pilar-col {
-            border-left: none;
-            border-top: 1px solid var(--color-line);
-            padding-left: 0;
+          .metodo-pilar-row-reverse .metodo-pilar-image-col {
+            order: 1;
           }
-          .metodo-pilar-col:first-child {
-            border-top: none;
+          .metodo-pilar-row-reverse .metodo-pilar-text-col {
+            order: 2;
           }
         }
       `}</style>

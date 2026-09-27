@@ -167,7 +167,7 @@ export default function Inscripcion() {
                   fontSize: "0.875rem",
                   position: "relative",
                   zIndex: 1,
-                  boxShadow: isActive ? "0 0 0 4px rgba(70,194,207,0.2)" : "none",
+                  boxShadow: isActive ? "0 0 0 4px color-mix(in srgb, var(--color-accent) 20%, transparent)" : "none",
                   transition: "all var(--duration-sm) var(--ease-out)",
                 }}
               >
@@ -251,7 +251,7 @@ export default function Inscripcion() {
                         padding: "16px",
                         borderRadius: "var(--radius-card)",
                         border: `1px solid ${isSelected ? "var(--color-accent)" : "var(--color-line)"}`,
-                        backgroundColor: isSelected ? "rgba(70,194,207,0.05)" : "transparent",
+                        backgroundColor: isSelected ? "color-mix(in srgb, var(--color-accent) 5%, transparent)" : "transparent",
                         cursor: "pointer",
                         transition: "all var(--duration-sm) var(--ease-out)",
                       }}
@@ -296,7 +296,7 @@ export default function Inscripcion() {
                         padding: "16px",
                         borderRadius: "var(--radius-card)",
                         border: `1px solid ${isSelected ? "var(--color-accent)" : "var(--color-line)"}`,
-                        backgroundColor: isSelected ? "rgba(70,194,207,0.05)" : "transparent",
+                        backgroundColor: isSelected ? "color-mix(in srgb, var(--color-accent) 5%, transparent)" : "transparent",
                         cursor: "pointer",
                         transition: "all var(--duration-sm) var(--ease-out)",
                       }}
