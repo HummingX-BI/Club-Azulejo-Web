@@ -21,6 +21,7 @@ const BG_MAP: Record<string, string> = {
   canvas:        "#0B1B24", // Hero / default
   "canvas-deep": "#081420", // El Método — slightly deeper
   "light":       "#EDEFEA", // Blank / white mode
+  "light-alt":   "#F6F7F1", // Alternating light sections
 };
 
 /* Opacity of the caustic layer per section type */
@@ -28,6 +29,7 @@ const CAUSTIC_OPACITY: Record<string, number> = {
   canvas:        0.045, // subtle at base
   "canvas-deep": 0.075, // slightly stronger in depth sections
   "light":       0,     // disable caustics on light background
+  "light-alt":   0,
 };
 
 const DEFAULT_KEY = "canvas";

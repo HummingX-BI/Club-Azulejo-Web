@@ -1,8 +1,6 @@
-import { Check } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
-import { Button } from "@/components/ui/Button";
 import { NIVELES, type NivelPrograma } from "@/data/niveles";
 
 /* ────────────────────────────────────────────────────────────────
@@ -37,15 +35,13 @@ function NivelBloque({
             Móvil: cabeza de la línea vertical izquierda.
         ──────────────────────────────────────────────────────────── */}
         <div className="riel-parada" aria-hidden="true">
-          {/* Círculo marcador */}
-          <div className={`riel-dot ${isActual ? "riel-dot--actual" : ""}`} />
           {/* Número de nivel */}
           <span
             className="tabular riel-num"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "clamp(0.9rem, 1.2vw, 1.1rem)",
-              fontWeight: 400,
+              fontWeight: isActual ? 600 : 400,
               letterSpacing: "-0.01em",
               color: isActual ? "var(--color-accent)" : "var(--color-text-muted)",
               lineHeight: 1,
@@ -136,61 +132,17 @@ function NivelBloque({
             </span>
           </div>
 
-          {/* Hitos con check */}
-          <ul
+          {/* Hitos en prosa */}
+          <p
             style={{
-              listStyle: "none",
-              margin: 0,
-              padding: 0,
-              display: "flex",
-              flexDirection: "column",
-              gap: "9px",
+              fontSize: "var(--font-size-small)",
+              color: "var(--color-text-muted)",
+              lineHeight: 1.65,
               marginBottom: "24px",
             }}
           >
-            {nivel.hitos.map((hito) => (
-              <li
-                key={hito}
-                style={{
-                  display: "flex",
-                  gap: "9px",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Check
-                  size={13}
-                  strokeWidth={2}
-                  aria-hidden="true"
-                  style={{
-                    color: "var(--color-accent)",
-                    flexShrink: 0,
-                    marginTop: "3px",
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: "var(--font-size-small)",
-                    color: "var(--color-text-muted)",
-                    lineHeight: 1.55,
-                  }}
-                >
-                  {hito}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          {/* CTA */}
-          <Button
-            variant="text"
-            size="md"
-            href={`/programas#${nivel.id}`}
-            style={{ paddingInline: 0 }}
-          >
-            {nivel.alumnoDestacado
-              ? `Plan de ${nivel.alumnoDestacado}`
-              : "Ver detalles"}
-          </Button>
+            {nivel.hitos.join(", ").replace(/,([^,]*)$/, " y$1")}.
+          </p>
         </div>
       </div>
     </Reveal>
@@ -202,8 +154,15 @@ export function Programas() {
   return (
     <section
       id="programas"
-      data-bg="canvas"
-      style={{ paddingBlock: "var(--spacing-section)" }}
+      data-bg="light-alt"
+      style={{
+        paddingBlock: "var(--spacing-section)",
+        "--color-text": "#0B1B24",
+        "--color-text-muted": "#5C6A72",
+        "--color-line": "rgba(11,27,36,0.12)",
+        "--color-surface": "rgba(11,27,36,0.04)",
+        "--color-surface-2": "#FFFFFF",
+      } as React.CSSProperties}
     >
       <Container>
         {/* ── Cabecera ─────────────────────────────────────────────── */}

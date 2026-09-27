@@ -31,7 +31,7 @@ export const INSTRUCTORES: InstructorData[] = [
     ],
     statLabel: "Ratio actual",
     statValue: "3 alumnos / sesión",
-    fotoUrl: "",
+    fotoUrl: "instructor-valeria-montes.jpg",
   },
   {
     id: "marcos-estrada",
@@ -46,7 +46,7 @@ export const INSTRUCTORES: InstructorData[] = [
     ],
     statLabel: "Retención HummingX",
     statValue: "98.2% histórico",
-    fotoUrl: "",
+    fotoUrl: "instructor-marcos-estrada.jpg",
   },
   {
     id: "elena-santillan",
@@ -61,6 +61,6 @@ export const INSTRUCTORES: InstructorData[] = [
     ],
     statLabel: "Asistencia media",
     statValue: "96% alumnos",
-    fotoUrl: "",
+    fotoUrl: "instructor-elena-santillan.jpg",
   },
 ];

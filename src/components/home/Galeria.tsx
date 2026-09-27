@@ -27,7 +27,18 @@ export function Galeria() {
       : GALERIA.filter((item) => item.categoria === filtroActivo);
 
   return (
-    <section id="galeria" data-bg="canvas" style={{ paddingBlock: "var(--spacing-section)" }}>
+    <section
+      id="galeria"
+      data-bg="light-alt"
+      style={{
+        paddingBlock: "var(--spacing-section)",
+        "--color-text": "#0B1B24",
+        "--color-text-muted": "#5C6A72",
+        "--color-line": "rgba(11,27,36,0.12)",
+        "--color-surface": "rgba(11,27,36,0.04)",
+        "--color-surface-2": "#FFFFFF",
+      } as React.CSSProperties}
+    >
       <Container>
         {/* ── Cabecera */}
         <Reveal>

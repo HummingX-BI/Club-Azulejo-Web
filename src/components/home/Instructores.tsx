@@ -3,7 +3,17 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
 import { Divider } from "@/components/ui/Divider";
+import { Button } from "@/components/ui/Button";
 import { INSTRUCTORES, type InstructorData } from "@/data/instructores";
+import fotoValeria from "@/assets/images/instructor-valeria-montes.jpg";
+import fotoMarcos from "@/assets/images/instructor-marcos-estrada.jpg";
+import fotoElena from "@/assets/images/instructor-elena-santillan.jpg";
+
+const FOTOS: Record<string, string> = {
+  "valeria-montes": fotoValeria,
+  "marcos-estrada": fotoMarcos,
+  "elena-santillan": fotoElena,
+};
 
 /* ────────────────────────────────────────────────────────────────
    Instructores — "Cuerpo Técnico Colegiado"
@@ -13,14 +23,16 @@ import { INSTRUCTORES, type InstructorData } from "@/data/instructores";
 
 function InstructorCard({ instructor }: { instructor: InstructorData }) {
   return (
-    <Card style={{ padding: 0, display: "flex", flexDirection: "column" }}>
+    <Card style={{ padding: 0, display: "flex", flexDirection: "column", height: "100%" }}>
       {/* ── Bloque de foto (placeholder) ───────────────────────── */}
       <div style={{ position: "relative" }}>
         <div
-          aria-label={`Foto de ${instructor.nombre} — pendiente`}
+          aria-label={`Foto de ${instructor.nombre}`}
           style={{
             aspectRatio: "4 / 5",
-            backgroundColor: "var(--color-surface-2)",
+            backgroundImage: `url(${FOTOS[instructor.id]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
             borderRadius: "var(--radius-card) var(--radius-card) 0 0",
           }}
         />
@@ -31,8 +43,9 @@ function InstructorCard({ instructor }: { instructor: InstructorData }) {
             bottom: "12px",
             left: "12px",
             display: "inline-block",
-            backgroundColor: "var(--color-surface)",
-            border: "1px solid var(--color-line)",
+            backgroundColor: "rgba(8, 20, 32, 0.72)",
+            backdropFilter: "blur(4px)",
+            border: "none",
             borderRadius: "var(--radius-pill)",
             padding: "4px 12px",
             fontFamily: "var(--font-body)",
@@ -40,7 +53,7 @@ function InstructorCard({ instructor }: { instructor: InstructorData }) {
             fontWeight: 600,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "var(--color-text-muted)",
+            color: "#EDEFEA",
           }}
         >
           {instructor.especialidadBadge}
@@ -89,6 +102,10 @@ function InstructorCard({ instructor }: { instructor: InstructorData }) {
             fontSize: "var(--font-size-small)",
             color: "var(--color-text-muted)",
             lineHeight: 1.65,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical" as const,
+            overflow: "hidden",
           }}
         >
           {instructor.bio}
@@ -96,38 +113,19 @@ function InstructorCard({ instructor }: { instructor: InstructorData }) {
 
         <Divider />
 
-        {/* Certificaciones — lista de texto plano */}
-        <ul
-          style={{
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: "6px",
-            flex: 1,
-          }}
-        >
-          {instructor.certificaciones.map((cert) => (
-            <li
-              key={cert}
-              style={{
-                fontSize: "0.75rem",
-                color: "var(--color-text-muted)",
-                lineHeight: 1.5,
-                paddingLeft: "12px",
-                borderLeft: "2px solid var(--color-line)",
-              }}
-            >
-              {cert}
-            </li>
-          ))}
-        </ul>
-
-        <Divider />
-
-        {/* Stat al pie */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+        {/* Stat destacado */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+          <span
+            className="tabular"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.75rem",
+              fontWeight: 400,
+              color: "var(--color-text)",
+            }}
+          >
+            {instructor.statValue}
+          </span>
           <span
             style={{
               fontSize: "0.6875rem",
@@ -138,18 +136,31 @@ function InstructorCard({ instructor }: { instructor: InstructorData }) {
           >
             {instructor.statLabel}
           </span>
-          <span
-            className="tabular"
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--font-size-small)",
-              fontWeight: 700,
-              color: "var(--color-text)",
-            }}
-          >
-            {instructor.statValue}
-          </span>
         </div>
+
+        {/* Certificaciones como tags */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", flex: 1, marginTop: "auto" }}>
+          {instructor.certificaciones.map((cert) => (
+            <span
+              key={cert}
+              title={cert}
+              style={{
+                fontSize: "0.6875rem",
+                color: "var(--color-text-muted)",
+                backgroundColor: "var(--color-surface-2)",
+                padding: "4px 10px",
+                borderRadius: "var(--radius-pill)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "220px",
+              }}
+            >
+              {cert}
+            </span>
+          ))}
+        </div>
+
       </div>
     </Card>
   );
@@ -160,8 +171,15 @@ export function Instructores() {
   return (
     <section
       id="instructores"
-      data-bg="canvas-deep"
-      style={{ paddingBlock: "var(--spacing-section)" }}
+      data-bg="light"
+      style={{
+        paddingBlock: "var(--spacing-section)",
+        "--color-text": "#0B1B24",
+        "--color-text-muted": "#5C6A72",
+        "--color-line": "rgba(11,27,36,0.12)",
+        "--color-surface": "rgba(11,27,36,0.04)",
+        "--color-surface-2": "#FFFFFF",
+      } as React.CSSProperties}
     >
       <Container>
         {/* ── Cabecera */}
@@ -204,7 +222,7 @@ export function Instructores() {
         {/* ── Grid de instructores */}
         <div className="instructores-grid">
           {INSTRUCTORES.map((inst) => (
-            <Reveal key={inst.id}>
+            <Reveal key={inst.id} style={{ height: "100%" }}>
               <InstructorCard instructor={inst} />
             </Reveal>
           ))}
@@ -216,7 +234,7 @@ export function Instructores() {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: clamp(16px, 2.5vw, 28px);
-          align-items: start;
+          align-items: stretch;
         }
         @media (max-width: 1023px) {
           .instructores-grid {
